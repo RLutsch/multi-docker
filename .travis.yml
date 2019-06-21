@@ -14,4 +14,23 @@ after_success:
   - docker build -t rosslutsch/multi-server ./server
   - docker build -t rosslutsch/multi-worker ./worker
 
+#log onto Docker CLI
+  - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_ID" --password-stdin
   #take images and push to dockerhub
+  - docker push rosslutsch/multi-client
+  - docker push rosslutsch/multi-nginx
+  - docker push rosslutsch/multi-server
+  - docker push rosslutsch/multi-worker
+
+deploy:
+  provider: elasticbeanstalk
+  region: us-east-2
+  app: multi-docker
+  env: MultiDocker-env
+  bucket_name:
+  bucket_path: elasticbeanstalk-us-east-2-379868135075
+  on:
+    branch: master
+  access_key_id: $AWS_ACCESS_KEY
+  secret_access_key:
+    secure: $AWS_SECRET_KEY

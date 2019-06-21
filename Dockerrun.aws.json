@@ -1,0 +1,35 @@
+{
+  "AWSEBDockerrunVersion" : 2,
+  "containerDefinitions" : [
+    {
+      "name" : "client",
+      "image" : "rosslutsch/multi-client",
+      "hostname" : "client",
+      "essential" : false
+    },
+    {
+      "name" : "server",
+      "image" : "rosslutsch/multi-server",
+      "hostname" : "api",
+      "essential" : false
+    },
+    {
+      "name" : "worker",
+      "image" : "rosslutsch/multi-worker",
+      "hostname" : "worker",
+      "essential" : false
+    },
+    {
+      "name" : "nginx",
+      "image" : "rosslutsch/multi-nginx",
+      "essential" : true,
+      "portMappings" : [
+        {
+          "hostPort" : 80,
+          "containerPort" : 80
+        }
+      ],
+      "links" : ["server", "client"]
+    }
+  ]
+}
